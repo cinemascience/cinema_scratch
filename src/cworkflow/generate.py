@@ -9,9 +9,6 @@ class Generate:
         self.ID   = -1
         self.initialized = False
 
-    def getID(self):
-        return self.ID
-
     def __incrID(self):
         self.ID += 1
 
