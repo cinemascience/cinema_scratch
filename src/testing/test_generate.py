@@ -1,6 +1,6 @@
 import unittest
 import vtk
-import cscratch
+import cworkflow
 import os
 
 class TestCIS(unittest.TestCase):
@@ -23,7 +23,7 @@ class TestCIS(unittest.TestCase):
 
     def test_generate(self):
         # load the database
-        self.__load_dataset()
+        self.__create_pipeline()
 
         # create the cameras to iterate over
         cameras = [
@@ -47,7 +47,7 @@ class TestCIS(unittest.TestCase):
 
         # create a database generate
         self.cdb = "testing/scratch/test.cdb"
-        generator = cscratch.generate.Generate(self.cdb)
+        generator = cworkflow.generate.Generate(self.cdb)
 
         # running the generator (on cameras)
         timesteps = [1, 2]
@@ -59,8 +59,8 @@ class TestCIS(unittest.TestCase):
         ]
 
         # install cinema explorer to look the new database
-        cscratch.cinstall.install.install.explorer(
-                "cscratch/cinstall/cinema.source",
+        cworkflow.install.install.install.explorer(
+                "cworkflow/install/cinema.source",
                 "testing/scratch", "explorer.html", dbs)
 
         # if you want to view the database
@@ -68,7 +68,7 @@ class TestCIS(unittest.TestCase):
 
 
 
-    def __load_dataset(self):
+    def __create_pipeline(self):
         # loading the data from disk
         fname = "../data/testdata.vti"
         reader = vtk.vtkXMLImageDataReader()
