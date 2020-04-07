@@ -7,11 +7,11 @@ A set of in-progress scripts and modules. To run the tests:
     python -m unittest discover testing
 ```
 
-## `test_generate`
+## Examples 
 
 <p align="center">
     <img width="500" src="img/test_generate.png"/>
 </p>
 <p align="center">Screen capture of the result of this example.</p>
 
-This is an example of how to generate a cinema phi/theta database from a vtk pipeline and render window.
+- `test_generate` This is an example of how to generate a cinema phi/theta database from a vtk pipeline and render window.
