@@ -7,6 +7,7 @@ class Generate:
     def __init__(self, path):
         self.path = path
         self.ID   = -1
+        self.initialized = False
 
     def getID(self):
         return self.ID
@@ -16,18 +17,30 @@ class Generate:
 
         return self.ID
 
-    def populate(self, rWin, cameras):
+    def __initialize(self):
+        
+        if not self.initialized:
+
+            if os.path.isdir(self.path):
+                shutil.rmtree(self.path)
+
+            # make a new database
+            os.makedirs(self.path)
+
+            with open(os.path.join(self.path, "data.csv"), "w", newline='\n') as dfile:
+                dfile.write("time,phi,theta,FILE\n")
+
+            self.initialized = True
+
+    def populate(self, rWin, time, cameras):
         """Given a VTK render window, populate a cinema database
         """
-        if os.path.isdir(self.path):
-            shutil.rmtree(self.path)
+
+        self.__initialize()
 
         theCamera = rWin.GetRenderers().GetFirstRenderer().GetActiveCamera()
 
-        # make a new database
-        os.makedirs(self.path)
-        with open(os.path.join(self.path, "data.csv"), "w", newline='\n') as dfile:
-            dfile.write("phi,theta,FILE\n")
+        with open(os.path.join(self.path, "data.csv"), "a", newline='\n') as dfile:
             for c in cameras:
                 theCamera.Azimuth(c['phi'])
                 theCamera.Elevation(c['theta'])
@@ -39,7 +52,7 @@ class Generate:
                 w2i.Update()
 
                 cID = self.__incrID()
-                dfile.write("{},{},{}.png\n".format(c['phi'], c['theta'], "{:04d}".format(cID)))
+                dfile.write("{},{},{},{}.png\n".format(time, c['phi'], c['theta'], "{:04d}".format(cID)))
                 iw.SetFileName(os.path.join(self.path, "{:04d}.png".format(cID)))
                 iw.Write()
 

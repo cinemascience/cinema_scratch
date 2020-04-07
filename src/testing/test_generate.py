@@ -22,8 +22,10 @@ class TestCIS(unittest.TestCase):
         return
 
     def test_generate(self):
+        # load the database
         self.__load_dataset()
 
+        # create the cameras to iterate over
         cameras = [
             {'phi':  0, 'theta':  0},
             {'phi': 15, 'theta':  0},
@@ -42,12 +44,21 @@ class TestCIS(unittest.TestCase):
             {'phi': 30, 'theta': 45},
             {'phi': 45, 'theta': 45}
         ]
+
+        # create a database generate
         self.cdb = "testing/scratch/test.cdb"
         generator = cscratch.generate.Generate(self.cdb)
-        generator.populate(self.renWin, cameras)
+
+        # running the generator (on cameras)
+        timesteps = [1, 2]
+        for t in timesteps:
+            generator.populate(self.renWin, t, cameras)
+
         dbs = [
             {"path": "test.cdb"}
         ]
+
+        # install cinema explorer to look the new database
         cscratch.cinstall.install.install.explorer(
                 "cscratch/cinstall/cinema.source",
                 "testing/scratch", "explorer.html", dbs)
@@ -58,11 +69,13 @@ class TestCIS(unittest.TestCase):
 
 
     def __load_dataset(self):
+        # loading the data from disk
         fname = "../data/testdata.vti"
         reader = vtk.vtkXMLImageDataReader()
         reader.SetFileName( fname )
         reader.Update()
 
+        # make the renderer and the render window
         ren = vtk.vtkRenderer()
         self.renWin = vtk.vtkRenderWindow()
         self.renWin.SetSize(1024, 768)
